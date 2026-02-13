@@ -1,0 +1,10 @@
+// Root tsconfig — references both app and server configs.
+// See tsconfig.app.json (frontend) and tsconfig.server.json (backend).
+{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.server.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
+}
