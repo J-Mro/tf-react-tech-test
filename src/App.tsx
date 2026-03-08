@@ -16,6 +16,7 @@ function App() {
   const [priorityFilter, setPriorityFilter] = useState<string | undefined>(
     undefined,
   );
+  const [noTitle, setNoTitle] = useState(false);
 
   // Fetch tasks on mount
   useEffect(() => {
@@ -33,7 +34,11 @@ function App() {
 
   // TODO: Customise this — add priority, due dates, or anything else you like!
   const handleAddTask = async () => {
-    if (!newTaskTitle.trim()) return;
+    setNoTitle(false);
+    if (!newTaskTitle.trim()) {
+      setNoTitle(true);
+      return;
+    }
     const task = await createTask({
       title: newTaskTitle,
       completed: false,
@@ -90,6 +95,11 @@ function App() {
           <option value="high">High</option>
         </select>
       </div>
+      {noTitle && (
+        <span style={{ color: "red" }}>
+          Please enter a title for your task ✏️
+        </span>
+      )}
       <div>
         Filters:
         <select
