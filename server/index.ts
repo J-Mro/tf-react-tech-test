@@ -63,6 +63,11 @@ let tasks: Task[] = [
 app.get("/api/tasks", (req: Request, res: Response) => {
   const { completed, priority } = req.query;
   const validPriorityArray: Priority[] = ["low", "medium", "high"];
+  const validCompletedArray: (string | undefined)[] = [
+    "true",
+    "false",
+    undefined,
+  ];
   let booleanCompleted: boolean | undefined = undefined;
   let priorityQuery: Priority | undefined = undefined;
   if (priority === "low") {
@@ -81,6 +86,14 @@ app.get("/api/tasks", (req: Request, res: Response) => {
     booleanCompleted = true;
   } else if (completed === "false") {
     booleanCompleted = false;
+  } else if (completed === undefined) {
+    booleanCompleted = undefined;
+  } else if (
+    completed !== undefined &&
+    !validCompletedArray.includes(completed)
+  ) {
+    res.status(400).json({ error: "completed must be heither true or false" });
+    return;
   }
   if (booleanCompleted === undefined && priorityQuery === undefined) {
     res.json(tasks);
