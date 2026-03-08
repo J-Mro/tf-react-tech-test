@@ -92,7 +92,7 @@ app.get("/api/tasks", (req: Request, res: Response) => {
     completed !== undefined &&
     !validCompletedArray.includes(completed)
   ) {
-    res.status(400).json({ error: "completed must be heither true or false" });
+    res.status(400).json({ error: "completed must be either true or false" });
     return;
   }
   if (booleanCompleted === undefined && priorityQuery === undefined) {
