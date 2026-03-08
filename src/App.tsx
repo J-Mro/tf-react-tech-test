@@ -59,7 +59,14 @@ function App() {
   if (error) return <p style={{ color: "red" }}>{error}</p>;
 
   return (
-    <div style={{ maxWidth: 600, margin: "0 auto", padding: 24 }}>
+    <div
+      style={{
+        maxWidth: 600,
+        margin: "0 auto",
+        padding: 24,
+        fontFamily: "Arial",
+      }}
+    >
       <h1>Task Manager</h1>
 
       {/* TODO: Improve this input — add priority, labels, due date, etc. */}
