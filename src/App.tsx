@@ -2,15 +2,16 @@
 // This is your starting point. Build out the UI here.
 // You're welcome to split this into multiple components if you'd like!
 
-import { useState, useEffect } from 'react';
-import { Task } from './types';
-import { getTasks, createTask, updateTask, deleteTask } from './api';
+import { useState, useEffect } from "react";
+import { Priority, Task } from "./types";
+import { getTasks, createTask, updateTask, deleteTask } from "./api";
 
 function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [newTaskTitle, setNewTaskTitle] = useState('');
+  const [newTaskTitle, setNewTaskTitle] = useState("");
+  const [priority, setPriority] = useState<string | undefined>(undefined);
 
   // Fetch tasks on mount
   useEffect(() => {
@@ -19,7 +20,7 @@ function App() {
         const data = await getTasks();
         setTasks(data);
       } catch {
-        setError('Failed to load tasks');
+        setError("Failed to load tasks");
       } finally {
         setLoading(false);
       }
@@ -29,9 +30,13 @@ function App() {
   // TODO: Customise this — add priority, due dates, or anything else you like!
   const handleAddTask = async () => {
     if (!newTaskTitle.trim()) return;
-    const task = await createTask({ title: newTaskTitle, completed: false });
+    const task = await createTask({
+      title: newTaskTitle,
+      completed: false,
+      priority: priority,
+    });
     setTasks((prev) => [...prev, task]);
-    setNewTaskTitle('');
+    setNewTaskTitle("");
   };
 
   // TODO: Expand this if you add extra fields to update
@@ -47,14 +52,14 @@ function App() {
   };
 
   if (loading) return <p>Loading tasks...</p>;
-  if (error) return <p style={{ color: 'red' }}>{error}</p>;
+  if (error) return <p style={{ color: "red" }}>{error}</p>;
 
   return (
-    <div style={{ maxWidth: 600, margin: '0 auto', padding: 24 }}>
+    <div style={{ maxWidth: 600, margin: "0 auto", padding: 24 }}>
       <h1>Task Manager</h1>
 
       {/* TODO: Improve this input — add priority, labels, due date, etc. */}
-      <div style={{ display: 'flex', gap: 8, marginBottom: 24 }}>
+      <div style={{ display: "flex", gap: 8, marginBottom: 24 }}>
         <input
           type="text"
           value={newTaskTitle}
@@ -62,20 +67,61 @@ function App() {
           placeholder="Add a new task..."
         />
         <button onClick={handleAddTask}>Add</button>
+        <select
+          name="priority-selector"
+          onChange={(e) => {
+            setPriority(e.target.value);
+          }}
+        >
+          <option value="">Choose a priority</option>
+          <option value="low">Low</option>
+          <option value="medium">Meidum</option>
+          <option value="high">High</option>
+        </select>
       </div>
 
       {/* TODO: Style this list — make it your own! */}
       {tasks.length === 0 ? (
         <p>No tasks yet. Add one above!</p>
       ) : (
-        <ul style={{ listStyle: 'none', padding: 0 }}>
+        <ul style={{ listStyle: "none", padding: 0 }}>
           {tasks.map((task) => (
-            <li key={task.id} style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 8 }}>
-              <span style={{ textDecoration: task.completed ? 'line-through' : 'none', flex: 1 }}>
+            <li
+              key={task.id}
+              style={{
+                display: "flex",
+                gap: 8,
+                alignItems: "center",
+                marginBottom: 8,
+              }}
+            >
+              <span
+                style={{
+                  textDecoration: task.completed ? "line-through" : "none",
+                  flex: 1,
+                }}
+              >
                 {task.title}
               </span>
+              {task.priority === "low" && (
+                <span style={{ backgroundColor: "green", color: "whitesmoke" }}>
+                  Low
+                </span>
+              )}
+              {task.priority === "medium" && (
+                <span
+                  style={{ backgroundColor: "orange", color: "whitesmoke" }}
+                >
+                  Medium
+                </span>
+              )}
+              {task.priority === "high" && (
+                <span style={{ backgroundColor: "red", color: "whitesmoke" }}>
+                  High
+                </span>
+              )}
               <button onClick={() => handleToggleComplete(task)}>
-                {task.completed ? 'Undo' : 'Complete'}
+                {task.completed ? "Undo" : "Complete"}
               </button>
               <button onClick={() => handleDeleteTask(task.id)}>Delete</button>
             </li>
