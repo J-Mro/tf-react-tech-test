@@ -17,6 +17,7 @@ function App() {
     undefined,
   );
   const [noTitle, setNoTitle] = useState(false);
+  const [sortValue, setSortValue] = useState<string | undefined>(undefined);
 
   // Fetch tasks on mount
   useEffect(() => {
@@ -111,7 +112,7 @@ function App() {
             setCompleted(parsedOption);
           }}
         >
-          <option value="">Complete/Incomplete?</option>
+          <option value="">Choose task status...</option>
           <option value="true">Complete</option>
           <option value="false">Incomplete</option>
         </select>
@@ -123,10 +124,25 @@ function App() {
             setPriorityFilter(parsedOption);
           }}
         >
-          <option value="">Choose a priority</option>
+          <option value="">Choose a priority...</option>
           <option value="low">Low</option>
           <option value="medium">Medium</option>
           <option value="high">High</option>
+        </select>
+      </div>
+      <div style={{ paddingTop: 2 }}>
+        Sort by urgency:
+        <select
+          name="priority-sort"
+          onChange={(e) => {
+            const parsedOption: string | undefined =
+              e.target.value === "" ? undefined : e.target.value;
+            setSortValue(parsedOption);
+          }}
+        >
+          <option value="">Choose to sort tasks...</option>
+          <option value="asc">Most urgent</option>
+          <option value="desc">Least urgent</option>
         </select>
       </div>
 
