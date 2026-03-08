@@ -32,30 +32,7 @@ interface Task {
 
 // ─── In-memory store ──────────────────────────────────────────────────────────
 
-// let tasks: Task[] = [];
-let tasks: Task[] = [
-  {
-    id: "43e64611-9c04-45ae-830c-c1736f68c674",
-    title: "task1",
-    completed: false,
-    createdAt: "2026-03-08T15:44:58.200Z",
-    priority: "low",
-  },
-  {
-    id: "b7528306-8c24-41c4-b4bf-32b27d592e1f",
-    title: "task2",
-    completed: true,
-    createdAt: "2026-03-08T15:45:00.210Z",
-    priority: "high",
-  },
-  {
-    id: "1155df0a-f0be-4ee1-98d1-a31e17675583",
-    title: "task3",
-    completed: false,
-    createdAt: "2026-03-08T15:45:02.986Z",
-    priority: "high",
-  },
-];
+let tasks: Task[] = [];
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
 
