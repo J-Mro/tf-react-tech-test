@@ -24,7 +24,8 @@ function App() {
       try {
         const data = await getTasks(completed, priorityFilter);
         setTasks(data);
-      } catch {
+      } catch (err) {
+        console.log(err);
         setError("Failed to load tasks");
       } finally {
         setLoading(false);
@@ -89,7 +90,7 @@ function App() {
             setPriority(e.target.value);
           }}
         >
-          <option value="none">Choose a priority...</option>
+          <option value="">Choose a priority...</option>
           <option value="low">Low</option>
           <option value="medium">Medium</option>
           <option value="high">High</option>
@@ -107,7 +108,7 @@ function App() {
           onChange={(e) => {
             const parsedOption: string | undefined =
               e.target.value === "" ? undefined : e.target.value;
-            setCompleted(e.target.value);
+            setCompleted(parsedOption);
           }}
         >
           <option value="">Complete/Incomplete?</option>
@@ -119,7 +120,7 @@ function App() {
           onChange={(e) => {
             const parsedOption: string | undefined =
               e.target.value === "" ? undefined : e.target.value;
-            setPriorityFilter(e.target.value);
+            setPriorityFilter(parsedOption);
           }}
         >
           <option value="">Choose a priority</option>
