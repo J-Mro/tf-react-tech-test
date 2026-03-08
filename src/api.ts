@@ -29,7 +29,9 @@ export const getTasks = async (
     const res = await fetch(`${BASE_URL}/tasks?priority=${priority}`);
     return handleResponse<Task[]>(res);
   } else if (completed !== undefined && priority !== undefined) {
-    const res = await fetch(`${BASE_URL}/tasks?`);
+    const res = await fetch(
+      `${BASE_URL}/tasks?completed=${completed}&priority=${priority}`,
+    );
     return handleResponse<Task[]>(res);
   } else {
     const res = await fetch(`${BASE_URL}/tasks`);
