@@ -71,26 +71,31 @@ app.get("/api/tasks", (req: Request, res: Response) => {
   } else if (priority === "high") {
     priorityQuery = "high";
   }
-
-  if (completed === undefined) {
-    res.json(tasks);
-    return;
-  } else if (completed === "true") {
+  if (completed === "true") {
     booleanCompleted = true;
-    const filteredTasks: Task[] = tasks.filter((task) => {
-      return task.completed === booleanCompleted;
-    });
-    res.json(filteredTasks);
-    return;
   } else if (completed === "false") {
     booleanCompleted = false;
+  }
+  if (booleanCompleted === undefined && priorityQuery === undefined) {
+    res.json(tasks);
+    return;
+  } else if (booleanCompleted !== undefined && priorityQuery === undefined) {
     const filteredTasks: Task[] = tasks.filter((task) => {
       return task.completed === booleanCompleted;
     });
     res.json(filteredTasks);
-    return;
-  } else {
-    res.json({ error: "completed" });
+  } else if (booleanCompleted === undefined && priorityQuery !== undefined) {
+    const filteredTasks: Task[] = tasks.filter((task) => {
+      return task.priority === priorityQuery;
+    });
+    res.json(filteredTasks);
+  } else if (booleanCompleted !== undefined && priorityQuery !== undefined) {
+    const filteredTasks: Task[] = tasks.filter((task) => {
+      return (
+        task.completed === booleanCompleted && task.priority === priorityQuery
+      );
+    });
+    res.json(filteredTasks);
   }
 });
 
