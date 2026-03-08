@@ -8,9 +8,9 @@
 //   - Add input validation and better error messages
 //   - Anything else you think would make this better!
 
-import express, { Request, Response } from 'express';
-import cors from 'cors';
-import { v4 as uuidv4 } from 'uuid';
+import express, { Request, Response } from "express";
+import cors from "cors";
+import { v4 as uuidv4 } from "uuid";
 
 const app = express();
 const PORT = 3001;
@@ -20,7 +20,7 @@ app.use(express.json());
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type Priority = 'low' | 'medium' | 'high';
+type Priority = "low" | "medium" | "high";
 
 interface Task {
   id: string;
@@ -32,21 +32,67 @@ interface Task {
 
 // ─── In-memory store ──────────────────────────────────────────────────────────
 
-let tasks: Task[] = [];
+// let tasks: Task[] = [];
+let tasks: Task[] = [
+  {
+    id: "43e64611-9c04-45ae-830c-c1736f68c674",
+    title: "task1",
+    completed: false,
+    createdAt: "2026-03-08T15:44:58.200Z",
+  },
+  {
+    id: "b7528306-8c24-41c4-b4bf-32b27d592e1f",
+    title: "task2",
+    completed: true,
+    createdAt: "2026-03-08T15:45:00.210Z",
+  },
+  {
+    id: "1155df0a-f0be-4ee1-98d1-a31e17675583",
+    title: "task3",
+    completed: false,
+    createdAt: "2026-03-08T15:45:02.986Z",
+  },
+];
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
 
 // GET /api/tasks — return all tasks
-app.get('/api/tasks', (_req: Request, res: Response) => {
-  res.json(tasks);
+app.get("/api/tasks", (req: Request, res: Response) => {
+  const { completed } = req.query;
+  const booleanCompleted: boolean | undefined = undefined;
+  if (completed === undefined) {
+    res.json(tasks);
+    return;
+  } else if (completed === "true") {
+    const booleanCompleted = true;
+    const filteredTasks: Task[] = tasks.filter((task) => {
+      return task.completed === booleanCompleted;
+    });
+    res.json(filteredTasks);
+    return;
+  } else if (completed === "false") {
+    const booleanCompleted = false;
+    const filteredTasks: Task[] = tasks.filter((task) => {
+      return task.completed === booleanCompleted;
+    });
+    res.json(filteredTasks);
+    return;
+  } else {
+    res.json({ error: "completed" });
+  }
 });
 
 // POST /api/tasks — create a new task
-app.post('/api/tasks', (req: Request, res: Response) => {
-  const { title, priority } = req.body as { title?: string; priority?: Priority };
+app.post("/api/tasks", (req: Request, res: Response) => {
+  const { title, priority } = req.body as {
+    title?: string;
+    priority?: Priority;
+  };
 
-  if (!title || typeof title !== 'string' || title.trim() === '') {
-    res.status(400).json({ error: 'title is required and must be a non-empty string' });
+  if (!title || typeof title !== "string" || title.trim() === "") {
+    res
+      .status(400)
+      .json({ error: "title is required and must be a non-empty string" });
     return;
   }
 
@@ -63,7 +109,7 @@ app.post('/api/tasks', (req: Request, res: Response) => {
 });
 
 // PATCH /api/tasks/:id — update a task
-app.patch('/api/tasks/:id', (req: Request, res: Response) => {
+app.patch("/api/tasks/:id", (req: Request, res: Response) => {
   const { id } = req.params;
   const index = tasks.findIndex((t) => t.id === id);
 
@@ -72,13 +118,13 @@ app.patch('/api/tasks/:id', (req: Request, res: Response) => {
     return;
   }
 
-  const updates = req.body as Partial<Omit<Task, 'id' | 'createdAt'>>;
+  const updates = req.body as Partial<Omit<Task, "id" | "createdAt">>;
   tasks[index] = { ...tasks[index], ...updates };
   res.json(tasks[index]);
 });
 
 // DELETE /api/tasks/:id — delete a task
-app.delete('/api/tasks/:id', (req: Request, res: Response) => {
+app.delete("/api/tasks/:id", (req: Request, res: Response) => {
   const { id } = req.params;
   const index = tasks.findIndex((t) => t.id === id);
 
