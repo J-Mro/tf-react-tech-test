@@ -62,6 +62,7 @@ let tasks: Task[] = [
 // GET /api/tasks — return all tasks
 app.get("/api/tasks", (req: Request, res: Response) => {
   const { completed, priority } = req.query;
+  const validPriorityArray: Priority[] = ["low", "medium", "high"];
   let booleanCompleted: boolean | undefined = undefined;
   let priorityQuery: Priority | undefined = undefined;
   if (priority === "low") {
@@ -70,6 +71,11 @@ app.get("/api/tasks", (req: Request, res: Response) => {
     priorityQuery = "medium";
   } else if (priority === "high") {
     priorityQuery = "high";
+  } else if (priority === undefined) {
+    priorityQuery = undefined;
+  } else if (priority !== undefined && !validPriorityArray.includes(priority)) {
+    res.status(400).json({ error: "priority must be high, medium, or low" });
+    return;
   }
   if (completed === "true") {
     booleanCompleted = true;
