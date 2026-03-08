@@ -39,18 +39,21 @@ let tasks: Task[] = [
     title: "task1",
     completed: false,
     createdAt: "2026-03-08T15:44:58.200Z",
+    priority: "low",
   },
   {
     id: "b7528306-8c24-41c4-b4bf-32b27d592e1f",
     title: "task2",
     completed: true,
     createdAt: "2026-03-08T15:45:00.210Z",
+    priority: "high",
   },
   {
     id: "1155df0a-f0be-4ee1-98d1-a31e17675583",
     title: "task3",
     completed: false,
     createdAt: "2026-03-08T15:45:02.986Z",
+    priority: "high",
   },
 ];
 
@@ -58,20 +61,29 @@ let tasks: Task[] = [
 
 // GET /api/tasks — return all tasks
 app.get("/api/tasks", (req: Request, res: Response) => {
-  const { completed } = req.query;
-  const booleanCompleted: boolean | undefined = undefined;
+  const { completed, priority } = req.query;
+  let booleanCompleted: boolean | undefined = undefined;
+  let priorityQuery: Priority | undefined = undefined;
+  if (priority === "low") {
+    priorityQuery = "low";
+  } else if (priority === "medium") {
+    priorityQuery = "medium";
+  } else if (priority === "high") {
+    priorityQuery = "high";
+  }
+
   if (completed === undefined) {
     res.json(tasks);
     return;
   } else if (completed === "true") {
-    const booleanCompleted = true;
+    booleanCompleted = true;
     const filteredTasks: Task[] = tasks.filter((task) => {
       return task.completed === booleanCompleted;
     });
     res.json(filteredTasks);
     return;
   } else if (completed === "false") {
-    const booleanCompleted = false;
+    booleanCompleted = false;
     const filteredTasks: Task[] = tasks.filter((task) => {
       return task.completed === booleanCompleted;
     });
