@@ -12,12 +12,16 @@ function App() {
   const [error, setError] = useState<string | null>(null);
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const [priority, setPriority] = useState<string | undefined>(undefined);
+  const [completed, setCompleted] = useState<string | undefined>(undefined);
+  const [priorityFilter, setPriorityFilter] = useState<string | undefined>(
+    undefined,
+  );
 
   // Fetch tasks on mount
   useEffect(() => {
     void (async () => {
       try {
-        const data = await getTasks();
+        const data = await getTasks(completed, priorityFilter);
         setTasks(data);
       } catch {
         setError("Failed to load tasks");
@@ -25,7 +29,7 @@ function App() {
         setLoading(false);
       }
     })();
-  }, []);
+  }, [completed, priorityFilter]);
 
   // TODO: Customise this — add priority, due dates, or anything else you like!
   const handleAddTask = async () => {
@@ -73,9 +77,37 @@ function App() {
             setPriority(e.target.value);
           }}
         >
+          <option value="none">Choose a priority...</option>
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+      </div>
+      <div>
+        Filters:
+        <select
+          name="completed-filter"
+          onChange={(e) => {
+            const parsedOption: string | undefined =
+              e.target.value === "" ? undefined : e.target.value;
+            setCompleted(e.target.value);
+          }}
+        >
+          <option value="">Complete/Incomplete?</option>
+          <option value="true">Complete</option>
+          <option value="false">Incomplete</option>
+        </select>
+        <select
+          name="priority-filter"
+          onChange={(e) => {
+            const parsedOption: string | undefined =
+              e.target.value === "" ? undefined : e.target.value;
+            setPriorityFilter(e.target.value);
+          }}
+        >
           <option value="">Choose a priority</option>
           <option value="low">Low</option>
-          <option value="medium">Meidum</option>
+          <option value="medium">Medium</option>
           <option value="high">High</option>
         </select>
       </div>
